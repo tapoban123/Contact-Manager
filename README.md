@@ -4,7 +4,8 @@
 
 ### Team Members
 
-Tapoban Ray  Aritra Das
+Tapoban Ray <br/> 
+Aritra Das
 Kartikeya Sinha
 Sanjog Das
 Srimoyee Ganguly
