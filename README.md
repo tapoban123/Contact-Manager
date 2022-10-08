@@ -4,8 +4,7 @@
 
 ### Team Members
 
-Tapoban Ray  return
-Aritra Das
+Tapoban Ray  Aritra Das
 Kartikeya Sinha
 Sanjog Das
 Srimoyee Ganguly
