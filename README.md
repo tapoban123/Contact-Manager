@@ -1,6 +1,6 @@
 # Computer Science Poject Class XII-Sci-D
 
-## Project Name: **Contact Manager**
+## Project Name: *Contact Manager*
 
 ### Team Members
 
