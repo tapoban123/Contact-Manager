@@ -8,6 +8,7 @@ def fill_details():
     top=Toplevel(bg='#F0DC82')
     top.geometry('700x400')
     top.title('Contact Manager')
+    
     Label(top,text='Contact Manager',font=('Segoe UI Black',30),bg='#F0DC82').place(x=180,y=10)
 
     Button(top, text="Add Contact",font=('Malgun Gothic Bold',18),padx=52,pady=5,borderwidth=5,command=add_rec).place(x=20,y=100)
@@ -26,15 +27,19 @@ def  add_rec():
     top_add.title('Add a Contact')
     top_add.geometry('500x400')
 
+
 def delete_rec():
     top_delete = Toplevel()
     top_delete.title('Delete a Contact')
     top_delete.geometry('500x400')
 
+
+
 def edit_rec():
     top_edit = Toplevel()
     top_edit.title('Edit a Contact')
     top_edit.geometry('500x400')
+
 
 def view_all():
     top_view_all = Toplevel()
