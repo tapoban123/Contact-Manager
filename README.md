@@ -1,11 +1,11 @@
 # Computer Science Poject Class XII-Sci-D
 
-## Project Name: Contact Manager
+## Project Name: *Contact Manager*
 
 ### Team Members
 
-Tapoban Ray
-Aritra Das
-Kartikeya Sinha
-Sanjog Das
-Srimoyee Ganguly
+Tapoban Ray <br/> 
+Aritra Das <br/>
+Kartikeya Sinha <br/>
+Sanjog Chandra <br/>
+Srimoyee Ganguly <br/>
