@@ -1,8 +1,22 @@
 from tkinter import *
+import sqlite3
 
 root= Tk()
 root.geometry('800x700')
 root.title('Contact Manager')
+
+conn = sqlite3.connect("Contacts_Mng.db")
+cursor = conn.cursor()
+cursor.execute(
+    '''CREATE TABLE IF NOT EXISTS CONTACT_RECS
+    (
+        CONTACT_ID int(5) PRIMARY KEY,
+        CONACT_FIRST_NAME VARCHAR(40) NOT NULL, 
+        CONTACT_NUMBER INTEGER(15) NOT NULL, 
+        CONTACT_DETAILS VARCHAR(50)
+    );
+''')
+
 
 def fill_details():
     top=Toplevel(bg='#F0DC82')
@@ -17,7 +31,7 @@ def fill_details():
 
     Button(top, text="Edit Contact",font=('Malgun Gothic Bold',18),padx=56,pady=5,borderwidth=5,command=edit_rec).place(x=400,y=100)
 
-    Button(top, text="View all Contacts",font=('Malgun Gothic Bold',18),padx=28,pady=5,borderwidth=5, command=view_all).place(x=400,y=200)
+    Button(top, text="View all Contacts",font=('Malgun Gothic Bold',18),padx=28,pady=5,borderwidth=5,command=view_all).place(x=400,y=200)
 
     Button(top,text='Exit',font=('Malgun Gothic Bold',18),padx=296,pady=5,borderwidth=5,command=root.quit).place(x=20,y=300)
 
@@ -25,8 +39,14 @@ def fill_details():
 def  add_rec():
     top_add = Toplevel()
     top_add.title('Add a Contact')
-    top_add.geometry('500x400')
+    top_add.geometry('800x400')
 
+    Label(top_add,text='Please fill the following Details',font=('Cambria Bold',25)).place(x=180,y=20)
+
+    Label(top_add,text='First Name',font=('Cambria',18)).place(x=50,y=80)
+    Label(top_add,text='Last Name',font=('Cambria',18)).place(x=50,y=120)
+    Label(top_add,text='Phone Number',font=('Calibri',18)).place(x=50,y=160)
+    Label(top_add,text='Details about the Contact',font=('Calibri',18)).place(x=50,y=200)
 
 def delete_rec():
     top_delete = Toplevel()
