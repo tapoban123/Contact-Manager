@@ -1,6 +1,7 @@
 from tkinter import *
 import sqlite3
 
+
 root= Tk()
 root.geometry('800x700')
 root.title('Contact Manager')
@@ -12,8 +13,9 @@ cursor.execute(
     (
         CONTACT_ID int(5) PRIMARY KEY,
         CONACT_FIRST_NAME VARCHAR(40) NOT NULL, 
-        CONTACT_NUMBER INTEGER(15) NOT NULL, 
-        CONTACT_DETAILS VARCHAR(50)
+        CONTACT_LAST_NAME VARCHAR(40) NOT NULL, 
+        CONTACT_PH_NO INTEGER(15) NOT NULL,
+        CONTACT_ADDRESS TEXT
     );
 ''')
 
@@ -36,17 +38,56 @@ def fill_details():
     Button(top,text='Exit',font=('Malgun Gothic Bold',18),padx=296,pady=5,borderwidth=5,command=root.quit).place(x=20,y=300)
 
 
+def add_recs_to_db():
+    cursor.execute('SELECT * FROM CONTACT_RECS;')
+    NO_OF_RECS = cursor.fetchall()
+
+    cursor.execute(f"INSERT INTO CONTACT_RECS VALUES({len(NO_OF_RECS)+1},'{entry_fname.get().strip()}','{entry_lname.get().strip()}',{entry_phno.get().strip()},'{entry_address.get().strip()}');")
+
+    entry_fname.delete(0,END)
+    entry_lname.delete(0,END)
+    entry_phno.delete(0,END)
+    entry_address.delete(0,END)
+
+    entry_fname.focus()
+
+
 def  add_rec():
     top_add = Toplevel()
     top_add.title('Add a Contact')
-    top_add.geometry('800x400')
+    top_add.geometry('785x435')
+
+    global entry_fname
+    global entry_lname
+    global entry_phno
+    global entry_address
 
     Label(top_add,text='Please fill the following Details',font=('Cambria Bold',25)).place(x=180,y=20)
 
-    Label(top_add,text='First Name',font=('Cambria',18)).place(x=50,y=80)
-    Label(top_add,text='Last Name',font=('Cambria',18)).place(x=50,y=120)
-    Label(top_add,text='Phone Number',font=('Calibri',18)).place(x=50,y=160)
-    Label(top_add,text='Details about the Contact',font=('Calibri',18)).place(x=50,y=200)
+    Label(top_add,text='First Name:',font=('Cambria',18)).place(x=50,y=100)
+    Label(top_add,text='Last Name:',font=('Cambria',18)).place(x=50,y=140)
+    Label(top_add,text='Phone Number:',font=('Calibri',18)).place(x=50,y=180)
+    Label(top_add,text='Address:',font=('Calibri',18)).place(x=50,y=220)
+
+    entry_fname = Entry(top_add,width=30,borderwidth=8,font=('Arial',15))
+    entry_lname = Entry(top_add,width=30,borderwidth=8,font=('Arial',15))
+    entry_phno = Entry(top_add,width=30,borderwidth=8,font=('Arial',15))
+    entry_address = Entry(top_add,width=30,borderwidth=8,font=('Arial',15))
+
+    entry_fname.place(x=390,y=100)
+    entry_lname.place(x=390,y=140)
+    entry_phno.place(x=390,y=180)
+    entry_address.place(x=390,y=220)
+
+    entry_fname.focus()
+    entry_fname.bind('<Return>',lambda x: entry_lname.focus())
+    entry_lname.bind('<Return>',lambda x: entry_phno.focus())
+    entry_phno.bind('<Return>',lambda x: entry_address.focus())
+    entry_address.bind('<Return>',lambda x: add_recs_to_db())
+
+    Button(top_add,text='Close',font=('Malgun Gothic Bold',18),padx=120,pady=10,borderwidth=5,command=top_add.destroy).place(x=50,y=300)
+    Button(top_add,text='OK',font=('Malgun Gothic Bold',18),padx=143,pady=10,borderwidth=5,command=add_recs_to_db).place(x=390,y=300)
+
 
 def delete_rec():
     top_delete = Toplevel()
