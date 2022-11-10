@@ -43,6 +43,7 @@ def add_recs_to_db():
     NO_OF_RECS = cursor.fetchall()
 
     cursor.execute(f"INSERT INTO CONTACT_RECS VALUES({len(NO_OF_RECS)+1},'{entry_fname.get().strip()}','{entry_lname.get().strip()}',{entry_phno.get().strip()},'{entry_address.get().strip()}');")
+    conn.commit()
 
     entry_fname.delete(0,END)
     entry_lname.delete(0,END)
