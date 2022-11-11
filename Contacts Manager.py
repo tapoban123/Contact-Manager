@@ -135,7 +135,7 @@ def view_all():
     rowheight=40)
     style.configure('Treeview.Heading',font=('Constantia',18,'bold'))
 
-    contacts_tree = ttk.Treeview(frame1,height=7,selectmode='browse',yscrollcommand=scroll_y.set,xscrollcommand=scroll_x.set)
+    contacts_tree = ttk.Treeview(frame1,height=7,selectmode='none',yscrollcommand=scroll_y.set,xscrollcommand=scroll_x.set)
 
     contacts_tree.tag_configure('oddrow',background='#F8F8FF')
     contacts_tree.tag_configure('evenrow',background='#9BDDFF')
