@@ -7,6 +7,7 @@ import sqlite3
 root= Tk()
 root.geometry('800x700')
 root.title('Contact Manager')
+root.iconbitmap('Contact Manager icon.ico')
 
 conn = sqlite3.connect("Contacts_Mng.db")
 cursor = conn.cursor()
@@ -23,7 +24,7 @@ cursor.execute(
 
 
 def fill_details():
-    top=Toplevel(bg='#F0DC82')
+    top=Toplevel(root,bg='#F0DC82')
     top.geometry('700x400')
     top.title('Contact Manager')
 
@@ -66,21 +67,21 @@ def  add_rec():
     global entry_phno
     global entry_address
 
-    top_add = Toplevel()
+    top_add = Toplevel(root,bg='#99BADD')
     top_add.title('Add a Contact')
     top_add.geometry('785x435')
 
-    Label(top_add,text='Please fill the following Details',font=('Cambria Bold',25)).place(x=180,y=20)
+    Label(top_add,text='Please fill the following Details',font=('Cambria Bold',25),bg='#99BADD').place(x=180,y=20)
 
-    Label(top_add,text='First Name:',font=('Cambria',18)).place(x=50,y=100)
-    Label(top_add,text='Last Name:',font=('Cambria',18)).place(x=50,y=140)
-    Label(top_add,text='Phone Number:',font=('Calibri',18)).place(x=50,y=180)
-    Label(top_add,text='Address:',font=('Calibri',18)).place(x=50,y=220)
+    Label(top_add,text='First Name:',font=('Cambria',18),bg='#99BADD').place(x=50,y=100)
+    Label(top_add,text='Last Name:',font=('Cambria',18),bg='#99BADD').place(x=50,y=140)
+    Label(top_add,text='Phone Number:',font=('Calibri',18),bg='#99BADD').place(x=50,y=180)
+    Label(top_add,text='Address:',font=('Calibri',18),bg='#99BADD').place(x=50,y=220)
 
-    entry_fname = Entry(top_add,width=30,borderwidth=8,font=('Arial',15))
-    entry_lname = Entry(top_add,width=30,borderwidth=8,font=('Arial',15))
-    entry_phno = Entry(top_add,width=30,borderwidth=8,font=('Arial',15))
-    entry_address = Entry(top_add,width=30,borderwidth=8,font=('Arial',15))
+    entry_fname = Entry(top_add,width=30,borderwidth=8,font=('Arial',15),bg='#DCDCDC')
+    entry_lname = Entry(top_add,width=30,borderwidth=8,font=('Arial',15),bg='#DCDCDC')
+    entry_phno = Entry(top_add,width=30,borderwidth=8,font=('Arial',15),bg='#DCDCDC')
+    entry_address = Entry(top_add,width=30,borderwidth=8,font=('Arial',15),bg='#DCDCDC')
 
     entry_fname.place(x=390,y=100)
     entry_lname.place(x=390,y=140)
@@ -98,26 +99,26 @@ def  add_rec():
 
 
 def delete_rec():
-    top_delete = Toplevel()
+    top_delete = Toplevel(root)
     top_delete.title('Delete a Contact')
     top_delete.geometry('500x400')
 
 
 def edit_rec():
-    top_edit = Toplevel()
+    top_edit = Toplevel(root)
     top_edit.title('Edit a Contact')
     top_edit.geometry('500x400')
 
 
 def view_all():
-    top_view_all = Toplevel()
+    top_view_all = Toplevel(root,bg='#99BADD')
     top_view_all.title('All Contacts')
     top_view_all.geometry('780x420')
 
     frame1 = Frame(top_view_all,width=600)
     frame1.pack(side=TOP,anchor='n')
 
-    frame2 = Frame(top_view_all,pady=8)
+    frame2 = Frame(top_view_all,pady=8,bg='#99BADD')
     frame2.pack()
 
     Button(frame2,text='Close',font=('Malgun Gothic Bold',18),padx=340,pady=10,borderwidth=4,command=top_view_all.destroy).pack(side=LEFT,anchor='w')
