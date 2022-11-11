@@ -103,11 +103,15 @@ def delete_rec():
     top_delete.title('Delete a Contact')
     top_delete.geometry('500x400')
 
+    Label(top_delete,text='Coming Soon...',font=('Arial',25)).pack(padx=30,pady=160)
+
 
 def edit_rec():
     top_edit = Toplevel(root)
     top_edit.title('Edit a Contact')
     top_edit.geometry('500x400')
+
+    Label(top_edit,text='Coming Soon...',font=('Arial',25)).pack(padx=30,pady=160)
 
 
 def view_all():
