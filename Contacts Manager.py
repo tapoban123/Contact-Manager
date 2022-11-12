@@ -4,7 +4,7 @@ from tkinter import messagebox
 import sqlite3
 
 
-root= Tk()
+root = Tk()
 root.geometry('800x700')
 root.title('Contact Manager')
 
@@ -113,21 +113,167 @@ def edit_rec():
     Label(top_edit,text='Coming Soon...',font=('Arial',25)).pack(padx=30,pady=160)
 
 
+def search_contact():
+    if len(search_fname.get()) > 0 and (len(search_lname.get()) == len(search_phno.get()) == 0):
+        cursor.execute(F"SELECT * FROM CONTACT_RECS WHERE CONACT_FIRST_NAME LIKE '{search_fname.get().title()}%';")
+        fname_data = cursor.fetchall()
+
+        for rec in contacts_tree.get_children():
+            contacts_tree.delete(rec)
+
+        fname_iid = 1
+        for data in fname_data:
+            if fname_iid % 2 == 0:
+                contacts_tree.insert(parent='',index='end',iid=fname_iid,values=data,tags='evenrow')
+            else:
+                contacts_tree.insert(parent='',index='end',iid=fname_iid,values=data,tags='oddrow')
+            fname_iid += 1
+    
+    if len(search_lname.get()) > 0 and (len(search_fname.get()) == len(search_phno.get()) == 0):
+        cursor.execute(F"SELECT * FROM CONTACT_RECS WHERE CONTACT_LAST_NAME LIKE '{search_lname.get().title()}%';")
+        lname_data = cursor.fetchall()
+
+        for rec2 in contacts_tree.get_children():
+            contacts_tree.delete(rec2)
+
+        lname_iid = 1
+        for data2 in lname_data:
+            if lname_iid % 2 == 0:
+                contacts_tree.insert(parent='',index='end',iid=lname_iid,values=data2,tags='evenrow')
+            else:
+                contacts_tree.insert(parent='',index='end',iid=lname_iid,values=data2,tags='oddrow')
+            lname_iid += 1
+
+    elif len(search_phno.get()) > 0 and (len(search_fname.get()) == len(search_lname.get()) == 0):
+        cursor.execute(F"SELECT * FROM CONTACT_RECS WHERE CONTACT_PH_NO LIKE '{int(search_phno.get())}%';")
+        phno_data = cursor.fetchall()
+
+        for rec_phno in contacts_tree.get_children():
+            contacts_tree.delete(rec_phno)
+        
+        phno_iid = 1
+        for data3 in phno_data:
+            if phno_iid % 2 == 0:
+                contacts_tree.insert(parent='',index='end',iid=phno_iid,values=data3,tags='evenrow')
+            else:
+                contacts_tree.insert(parent='',index='end',iid=phno_iid,values=data3,tags='oddrow')
+            phno_iid += 1
+    
+    elif (len(search_fname.get()) == len(search_lname.get()) == len(search_phno.get()) == 0):
+        cursor.execute('SELECT * FROM CONTACT_RECS;')
+        ALL_DATA = cursor.fetchall()
+
+        for s_recs in contacts_tree.get_children():
+            contacts_tree.delete(s_recs)
+
+        all_iid = 1
+        for all_recs in ALL_DATA:
+            if all_iid  % 2 == 0:
+                contacts_tree.insert(parent='',index='end',iid=all_iid,values=all_recs,tags='evenrow')
+            else:
+                contacts_tree.insert(parent='',index='end',iid=all_iid,values=all_recs,tags='oddrow')
+            all_iid += 1
+
+    elif (len(search_fname.get()) > 0 and len(search_lname.get())) > 0 and len(search_phno.get()) == 0:
+        cursor.execute(F"SELECT * FROM CONTACT_RECS WHERE CONACT_FIRST_NAME LIKE '{search_fname.get()}%' and CONTACT_LAST_NAME LIKE '{search_lname.get()}%';")
+        fname_lname = cursor.fetchall()
+
+        for recfl in contacts_tree.get_children():
+            contacts_tree.delete(recfl)
+
+        fl_iid = 1
+        for data4 in fname_lname:
+            if fl_iid % 2 == 0:
+                contacts_tree.insert(parent='',index='end',iid=fl_iid,values=data4,tags='evenrow')
+            else:
+                contacts_tree.insert(parent='',index='end',iid=fl_iid,values=data4,tags='oddrow')
+            fl_iid += 1
+
+    elif len(search_fname.get()) == 0 and (len(search_lname.get()) > 0 and len(search_phno.get()) > 0):
+        cursor.execute(f"SELECT * FROM CONTACT_RECS WHERE CONTACT_LAST_NAME LIKE '{search_lname.get()}%' and CONTACT_PH_NO LIKE '{search_phno.get()}%';")
+        phno_lname = cursor.fetchall()
+
+        for recphl in contacts_tree.get_children():
+            contacts_tree.delete(recphl)
+        
+        phl_iid = 1
+        for data5 in phno_lname:
+            if phl_iid % 2 == 0:
+                contacts_tree.insert(parent='',index='end',iid=phl_iid,values=data5,tags='evenrow')
+            else:
+                contacts_tree.insert(parent='',index='end',iid=phl_iid,values=data5,tags='oddrow')
+            phl_iid += 1
+        
+    elif len(search_fname.get()) > 0 and len(search_lname.get()) == 0 and len(search_phno.get()) > 0:
+        cursor.execute(f"SELECT * FROM CONTACT_RECS WHERE CONACT_FIRST_NAME LIKE '{search_fname.get()}%' and CONTACT_PH_NO LIKE '{search_phno.get()}%';")
+        fphno = cursor.fetchall()
+
+        for fph in contacts_tree.get_children():
+            contacts_tree.delete(fph)
+        
+        fph_iid = 1
+        for data6 in fphno:
+            if fph_iid % 2 == 0:
+                contacts_tree.insert(parent='',index='end',iid=fph_iid,values=data6,tags='evenrow')
+            else:
+                contacts_tree.insert(parent='',index='end',iid=fph_iid,values=data6,tags='oddrow')
+            fph_iid += 1
+
+    elif len(search_fname.get()) > 0 and len(search_lname.get()) > 0 and len(search_phno.get()) > 0:
+        cursor.execute(f"SELECT * FROM CONTACT_RECS WHERE CONACT_FIRST_NAME LIKE '{search_fname.get()}%' AND CONTACT_LAST_NAME LIKE '{search_lname.get()}%' AND CONTACT_PH_NO LIKE '{search_phno.get()}%';")
+        fname_lname_phno = cursor.fetchall()
+
+        for flphno in contacts_tree.get_children():
+            contacts_tree.delete(flphno)
+        
+        fname_lname_phno_iid = 1
+        for data7 in fname_lname_phno:
+            if fname_lname_phno_iid % 2 == 0:
+                contacts_tree.insert(parent='',index='end',iid=fname_lname_phno_iid,values=data7,tags='evenrow')
+            else:
+                contacts_tree.insert(parent='',index='end',iid=fname_lname_phno_iid,values=data7,tags='oddrow')
+            fname_lname_phno_iid += 1
+
+
 def view_all():
+    global search_fname
+    global search_lname
+    global search_phno
+    global contacts_tree
+
     top_view_all = Toplevel(root,bg='#99BADD')
     top_view_all.title('All Contacts')
-    top_view_all.geometry('780x420')
+    top_view_all.geometry('780x670')
 
     frame1 = Frame(top_view_all,width=600)
     frame1.pack(side=TOP,anchor='n')
 
-    frame2 = Frame(top_view_all,pady=8,bg='#99BADD')
-    frame2.pack()
+    frame2 = Frame(top_view_all,height=400,width=800,bg='#99BADD')
+    frame2.pack(side=LEFT,anchor='e')
 
-    Button(frame2,text='Close',font=('Malgun Gothic Bold',18),padx=340,pady=10,borderwidth=4,command=top_view_all.destroy).pack(side=LEFT,anchor='w')
+    Label(frame2,text='Search Record',font=('Calibri',20,'bold'),bg='#99BADD').place(x=320,y=5)
+    Label(frame2,text='First Name:',font=('Calibri',16,'bold'),bg='#99BADD').place(x=60,y=70)
+    Label(frame2,text='Last Name:',font=('Calibri',16,'bold'),bg='#99BADD').place(x=60,y=110)
+    Label(frame2,text='Phone Number:',font=('Calibri',16,'bold'),bg='#99BADD').place(x=60,y=150)
+
+    search_fname = Entry(frame2,width=30,borderwidth=8,font=('Arial 14'),bg='#DCDCDC')
+    search_lname = Entry(frame2,width=30,borderwidth=8,font=('Arial 14'),bg='#DCDCDC')
+    search_phno = Entry(frame2,width=30,borderwidth=8,font=('Arial 14'),bg='#DCDCDC')
+
+    search_fname.place(x=340,y=70)
+    search_lname.place(x=340,y=110)
+    search_phno.place(x=340,y=150)
+
+    search_fname.focus()
+    search_fname.bind('<Return>',lambda x: search_lname.focus())
+    search_lname.bind('<Return>',lambda x: search_phno.focus())
+    search_phno.bind('<Return>',lambda x: search_contact())
+
+    Button(frame2,text='Search',font=('Malgun Gothic Bold',18),padx=120,pady=10,borderwidth=4,command=search_contact).place(x=30,y=230)
+    Button(frame2,text='Close',font=('Malgun Gothic Bold',18),padx=130,pady=10,borderwidth=4,command=top_view_all.destroy).place(x=400,y=230)
 
     scroll_y = Scrollbar(frame1,orient=VERTICAL)
-    scroll_y.pack(side=RIGHT,fill=Y)
+    scroll_y.pack(side=RIGHT,fill=Y,expand=True)
 
     scroll_x = Scrollbar(frame1,orient=HORIZONTAL)
     scroll_x.pack(side=BOTTOM,fill=X)
