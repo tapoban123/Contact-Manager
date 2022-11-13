@@ -24,7 +24,9 @@ cursor.execute(
 
 
 def fill_details():
-    top=Toplevel(root,bg='#F0DC82')
+    global top
+
+    top = Toplevel(root,bg='#F0DC82')
     top.geometry('700x400')
     top.title('Contact Manager')
 
@@ -125,70 +127,73 @@ def del_selected_contact():
 def delete_rec():
     global contact_del_tree
 
-    top_delete = Toplevel(root)
-    top_delete.title('Delete Contact')
-    top_delete.geometry('800x422')
-
-    del_frame = Frame(top_delete,height=600,width=600)
-    del_frame.pack(side=TOP)
-
-    del_frame2 = Frame(top_delete,width=1000,height=600,bg='#99BADD')
-    del_frame2.pack(side=TOP,anchor='w')
-
-    Button(del_frame2,text='Delete Selected',font=('Malgun Gothic Bold',18),padx=105,pady=10,borderwidth=4,command=del_selected_contact).place(x=5,y=10)
-    Button(del_frame2,text='Close',font=('Malgun Gothic Bold',18),padx=145,pady=10,borderwidth=4,command=top_delete.destroy).place(x=420,y=10)
-
-    xScroll = Scrollbar(del_frame,orient=HORIZONTAL)
-    xScroll.pack(side=BOTTOM,fill=X)
-
-    yScroll = Scrollbar(del_frame,orient=VERTICAL)
-    yScroll.pack(side=RIGHT,fill=Y)
-
-    style = ttk.Style()
-    style.configure('Treeview',
-    font=('Cambria',14),
-    rowheight=40)
-    style.configure('Treeview.Heading',font=('Constantia',18,'bold'))
-
-    contact_del_tree = ttk.Treeview(del_frame,height=7,selectmode='extended',yscrollcommand=yScroll.set,xscrollcommand=xScroll.set)
-
-    xScroll.config(command=contact_del_tree.xview)
-    yScroll.config(command=contact_del_tree.yview)
-
-    contact_del_tree.tag_configure('oddrow',background='#F8F8FF')
-    contact_del_tree.tag_configure('evenrow',background='#9BDDFF')
-
-    contact_del_tree['columns'] = ('Contact ID','First Name','Last Name','Phone Number','Address')
-
-    contact_del_tree.heading('#0',text='')
-    contact_del_tree.heading('#1',text='Contact ID',anchor='c')
-    contact_del_tree.heading('#2',text='First Name',anchor='c')
-    contact_del_tree.heading('#3',text='Last Name',anchor='c')
-    contact_del_tree.heading('#4',text='Phone Number',anchor='c')
-    contact_del_tree.heading('#5',text='Address',anchor='c')
-
-    contact_del_tree.column('#0',width=0,minwidth=0,stretch=NO)
-    contact_del_tree.column('#1',width=150,minwidth=0,stretch=NO,anchor='c')
-    contact_del_tree.column('#2',width=200,minwidth=0,stretch=NO,anchor='c')
-    contact_del_tree.column('#3',width=240,minwidth=0,stretch=NO,anchor='c')
-    contact_del_tree.column('#4',width=260,minwidth=0,stretch=NO,anchor='c')
-    contact_del_tree.column('#5',width=400,minwidth=0,stretch=NO,anchor='c')
-
     cursor.execute('SELECT * FROM CONTACT_RECS;')
     DEL_DATA = cursor.fetchall()
 
-    del_tree_iid = 1
-    for DATA in DEL_DATA:
-        if del_tree_iid % 2 == 0:
-            contact_del_tree.insert(parent='',index='end',iid=del_tree_iid,values=DATA,tags='evenrow')
-        else:
-            contact_del_tree.insert(parent='',index='end',iid=del_tree_iid,values=DATA,tags='oddrow')
-        del_tree_iid += 1
+    if len(DEL_DATA) == 0:
+        messagebox.showwarning('No Contact Present',"You cannot delete contact untill you add one.",parent=top)
+    else:
+        top_delete = Toplevel(root)
+        top_delete.title('Delete Contact')
+        top_delete.geometry('800x422')
 
-    contact_del_tree.pack()
+        del_frame = Frame(top_delete,height=600,width=600)
+        del_frame.pack(side=TOP)
 
-    messagebox.showinfo('Contact IDs Updated','All Contact IDs have been updated',parent=top_delete)
+        del_frame2 = Frame(top_delete,width=1000,height=600,bg='#99BADD')
+        del_frame2.pack(side=TOP,anchor='w')
 
+        Button(del_frame2,text='Delete Selected',font=('Malgun Gothic Bold',18),padx=105,pady=10,borderwidth=4,command=del_selected_contact).place(x=5,y=10)
+        Button(del_frame2,text='Close',font=('Malgun Gothic Bold',18),padx=145,pady=10,borderwidth=4,command=top_delete.destroy).place(x=420,y=10)
+
+        xScroll = Scrollbar(del_frame,orient=HORIZONTAL)
+        xScroll.pack(side=BOTTOM,fill=X)
+
+        yScroll = Scrollbar(del_frame,orient=VERTICAL)
+        yScroll.pack(side=RIGHT,fill=Y)
+
+        style = ttk.Style()
+        style.configure('Treeview',
+        font=('Cambria',14),
+        rowheight=40)
+        style.configure('Treeview.Heading',font=('Constantia',18,'bold'))
+
+        contact_del_tree = ttk.Treeview(del_frame,height=7,selectmode='extended',yscrollcommand=yScroll.set,xscrollcommand=xScroll.set)
+
+        xScroll.config(command=contact_del_tree.xview)
+        yScroll.config(command=contact_del_tree.yview)
+
+        contact_del_tree.tag_configure('oddrow',background='#F8F8FF')
+        contact_del_tree.tag_configure('evenrow',background='#9BDDFF')
+
+        contact_del_tree['columns'] = ('Contact ID','First Name','Last Name','Phone Number','Address')
+
+        contact_del_tree.heading('#0',text='')
+        contact_del_tree.heading('#1',text='Contact ID',anchor='c')
+        contact_del_tree.heading('#2',text='First Name',anchor='c')
+        contact_del_tree.heading('#3',text='Last Name',anchor='c')
+        contact_del_tree.heading('#4',text='Phone Number',anchor='c')
+        contact_del_tree.heading('#5',text='Address',anchor='c')
+
+        contact_del_tree.column('#0',width=0,minwidth=0,stretch=NO)
+        contact_del_tree.column('#1',width=150,minwidth=0,stretch=NO,anchor='c')
+        contact_del_tree.column('#2',width=200,minwidth=0,stretch=NO,anchor='c')
+        contact_del_tree.column('#3',width=240,minwidth=0,stretch=NO,anchor='c')
+        contact_del_tree.column('#4',width=260,minwidth=0,stretch=NO,anchor='c')
+        contact_del_tree.column('#5',width=400,minwidth=0,stretch=NO,anchor='c')
+
+        del_tree_iid = 1
+        for DATA in DEL_DATA:
+            if del_tree_iid % 2 == 0:
+                contact_del_tree.insert(parent='',index='end',iid=del_tree_iid,values=DATA,tags='evenrow')
+            else:
+                contact_del_tree.insert(parent='',index='end',iid=del_tree_iid,values=DATA,tags='oddrow')
+            del_tree_iid += 1
+
+        contact_del_tree.pack()
+
+        messagebox.showinfo('Contact IDs Updated','All Contact IDs have been updated',parent=top_delete)
+    
 
 def edit_rec():
     top_edit = Toplevel(root)
@@ -260,7 +265,7 @@ def search_contact():
             all_iid += 1
 
     elif (len(search_fname.get()) > 0 and len(search_lname.get())) > 0 and len(search_phno.get()) == 0:
-        cursor.execute(F"SELECT * FROM CONTACT_RECS WHERE CONACT_FIRST_NAME LIKE '{search_fname.get()}%' and CONTACT_LAST_NAME LIKE '{search_lname.get()}%';")
+        cursor.execute(F"SELECT * FROM CONTACT_RECS WHERE CONACT_FIRST_NAME LIKE '{search_fname.get().title()}%' and CONTACT_LAST_NAME LIKE '{search_lname.get().title()}%';")
         fname_lname = cursor.fetchall()
 
         for recfl in contacts_tree.get_children():
@@ -275,7 +280,7 @@ def search_contact():
             fl_iid += 1
 
     elif len(search_fname.get()) == 0 and (len(search_lname.get()) > 0 and len(search_phno.get()) > 0):
-        cursor.execute(f"SELECT * FROM CONTACT_RECS WHERE CONTACT_LAST_NAME LIKE '{search_lname.get()}%' and CONTACT_PH_NO LIKE '{search_phno.get()}%';")
+        cursor.execute(f"SELECT * FROM CONTACT_RECS WHERE CONTACT_LAST_NAME LIKE '{search_lname.get().title()}%' and CONTACT_PH_NO LIKE '{search_phno.get()}%';")
         phno_lname = cursor.fetchall()
 
         for recphl in contacts_tree.get_children():
@@ -290,7 +295,7 @@ def search_contact():
             phl_iid += 1
         
     elif len(search_fname.get()) > 0 and len(search_lname.get()) == 0 and len(search_phno.get()) > 0:
-        cursor.execute(f"SELECT * FROM CONTACT_RECS WHERE CONACT_FIRST_NAME LIKE '{search_fname.get()}%' and CONTACT_PH_NO LIKE '{search_phno.get()}%';")
+        cursor.execute(f"SELECT * FROM CONTACT_RECS WHERE CONACT_FIRST_NAME LIKE '{search_fname.get().title()}%' and CONTACT_PH_NO LIKE '{search_phno.get()}%';")
         fphno = cursor.fetchall()
 
         for fph in contacts_tree.get_children():
@@ -305,7 +310,7 @@ def search_contact():
             fph_iid += 1
 
     elif len(search_fname.get()) > 0 and len(search_lname.get()) > 0 and len(search_phno.get()) > 0:
-        cursor.execute(f"SELECT * FROM CONTACT_RECS WHERE CONACT_FIRST_NAME LIKE '{search_fname.get()}%' AND CONTACT_LAST_NAME LIKE '{search_lname.get()}%' AND CONTACT_PH_NO LIKE '{search_phno.get()}%';")
+        cursor.execute(f"SELECT * FROM CONTACT_RECS WHERE CONACT_FIRST_NAME LIKE '{search_fname.get().title()}%' AND CONTACT_LAST_NAME LIKE '{search_lname.get().title()}%' AND CONTACT_PH_NO LIKE '{search_phno.get()}%';")
         fname_lname_phno = cursor.fetchall()
 
         for flphno in contacts_tree.get_children():
@@ -326,85 +331,91 @@ def view_all():
     global search_phno
     global contacts_tree
 
-    top_view_all = Toplevel(root,bg='#99BADD')
-    top_view_all.title('All Contacts')
-    top_view_all.geometry('780x670')
-
-    frame1 = Frame(top_view_all,width=600)
-    frame1.pack(side=TOP,anchor='n')
-
-    frame2 = Frame(top_view_all,height=400,width=800,bg='#99BADD')
-    frame2.pack(side=LEFT,anchor='e')
-
-    Label(frame2,text='Search Record',font=('Calibri',20,'bold'),bg='#99BADD').place(x=320,y=5)
-    Label(frame2,text='First Name:',font=('Calibri',16,'bold'),bg='#99BADD').place(x=60,y=70)
-    Label(frame2,text='Last Name:',font=('Calibri',16,'bold'),bg='#99BADD').place(x=60,y=110)
-    Label(frame2,text='Phone Number:',font=('Calibri',16,'bold'),bg='#99BADD').place(x=60,y=150)
-
-    search_fname = Entry(frame2,width=30,borderwidth=8,font=('Arial 14'),bg='#DCDCDC')
-    search_lname = Entry(frame2,width=30,borderwidth=8,font=('Arial 14'),bg='#DCDCDC')
-    search_phno = Entry(frame2,width=30,borderwidth=8,font=('Arial 14'),bg='#DCDCDC')
-
-    search_fname.place(x=340,y=70)
-    search_lname.place(x=340,y=110)
-    search_phno.place(x=340,y=150)
-
-    search_fname.focus()
-    search_fname.bind('<Return>',lambda x: search_lname.focus())
-    search_lname.bind('<Return>',lambda x: search_phno.focus())
-    search_phno.bind('<Return>',lambda x: search_contact())
-
-    Button(frame2,text='Search',font=('Malgun Gothic Bold',18),padx=120,pady=10,borderwidth=4,command=search_contact).place(x=30,y=230)
-    Button(frame2,text='Close',font=('Malgun Gothic Bold',18),padx=130,pady=10,borderwidth=4,command=top_view_all.destroy).place(x=400,y=230)
-
-    scroll_y = Scrollbar(frame1,orient=VERTICAL)
-    scroll_y.pack(side=RIGHT,fill=Y,expand=True)
-
-    scroll_x = Scrollbar(frame1,orient=HORIZONTAL)
-    scroll_x.pack(side=BOTTOM,fill=X)
-
-    style = ttk.Style()
-    style.configure('Treeview',
-    font=('Cambria',14),
-    rowheight=40)
-    style.configure('Treeview.Heading',font=('Constantia',18,'bold'))
-
-    contacts_tree = ttk.Treeview(frame1,height=7,selectmode='none',yscrollcommand=scroll_y.set,xscrollcommand=scroll_x.set)
-
-    contacts_tree.tag_configure('oddrow',background='#F8F8FF')
-    contacts_tree.tag_configure('evenrow',background='#9BDDFF')
-
-    scroll_x.config(command=contacts_tree.xview)
-    scroll_y.config(command=contacts_tree.yview)
-
-    contacts_tree['columns'] = ('Contact ID','First Name','Last Name','Phone Number','Address')
-
-    contacts_tree.heading('#0',text='')
-    contacts_tree.heading('#1',text='Contact ID',anchor='c')
-    contacts_tree.heading('#2',text='First Name',anchor='c')
-    contacts_tree.heading('#3',text='Last Name',anchor='c')
-    contacts_tree.heading('#4',text='Phone Number',anchor='c')
-    contacts_tree.heading('#5',text='Address',anchor='c')
-
-    contacts_tree.column('#0',width=0,minwidth=0,stretch=NO)
-    contacts_tree.column('#1',width=150,minwidth=0,stretch=NO,anchor='c')
-    contacts_tree.column('#2',width=200,minwidth=0,stretch=NO,anchor='c')
-    contacts_tree.column('#3',width=240,minwidth=0,stretch=NO,anchor='c')
-    contacts_tree.column('#4',width=260,minwidth=0,stretch=NO,anchor='c')
-    contacts_tree.column('#5',width=400,minwidth=0,stretch=NO,anchor='c')
-
     cursor.execute('SELECT * FROM CONTACT_RECS;')
     CONTACTS = cursor.fetchall()
 
-    tree_iid = 1 
-    for contact in CONTACTS:
-        if tree_iid % 2 == 0:
-            contacts_tree.insert(parent='',index='end',iid=tree_iid,values=contact,tags='evenrow')
-        else:
-            contacts_tree.insert(parent='',index='end',iid=tree_iid,values=contact,tags='oddrow')
-        tree_iid += 1
+    if len(CONTACTS) == 0:
+        user_wish = messagebox.askyesno('No Contact to Display',"You do not have any contact recorded to display.Do you want ot add any contact now?",parent=top)
+        if user_wish == True:
+            add_rec()
+            
+    else:
+        top_view_all = Toplevel(root,bg='#99BADD')
+        top_view_all.title('All Contacts')
+        top_view_all.geometry('780x670')
 
-    contacts_tree.pack()
+        frame1 = Frame(top_view_all,width=600)
+        frame1.pack(side=TOP,anchor='n')
+
+        frame2 = Frame(top_view_all,height=400,width=800,bg='#99BADD')
+        frame2.pack(side=LEFT,anchor='e')
+
+        Label(frame2,text='Search Record',font=('Calibri',20,'bold'),bg='#99BADD').place(x=320,y=5)
+        Label(frame2,text='First Name:',font=('Calibri',16,'bold'),bg='#99BADD').place(x=60,y=70)
+        Label(frame2,text='Last Name:',font=('Calibri',16,'bold'),bg='#99BADD').place(x=60,y=110)
+        Label(frame2,text='Phone Number:',font=('Calibri',16,'bold'),bg='#99BADD').place(x=60,y=150)
+
+        search_fname = Entry(frame2,width=30,borderwidth=8,font=('Arial 14'),bg='#DCDCDC')
+        search_lname = Entry(frame2,width=30,borderwidth=8,font=('Arial 14'),bg='#DCDCDC')
+        search_phno = Entry(frame2,width=30,borderwidth=8,font=('Arial 14'),bg='#DCDCDC')
+
+        search_fname.place(x=340,y=70)
+        search_lname.place(x=340,y=110)
+        search_phno.place(x=340,y=150)
+
+        search_fname.focus()
+        search_fname.bind('<Return>',lambda x: search_lname.focus())
+        search_lname.bind('<Return>',lambda x: search_phno.focus())
+        search_phno.bind('<Return>',lambda x: search_contact())
+
+        Button(frame2,text='Search',font=('Malgun Gothic Bold',18),padx=120,pady=10,borderwidth=4,command=search_contact).place(x=30,y=230)
+        Button(frame2,text='Close',font=('Malgun Gothic Bold',18),padx=130,pady=10,borderwidth=4,command=top_view_all.destroy).place(x=400,y=230)
+
+        scroll_y = Scrollbar(frame1,orient=VERTICAL)
+        scroll_y.pack(side=RIGHT,fill=Y,expand=True)
+
+        scroll_x = Scrollbar(frame1,orient=HORIZONTAL)
+        scroll_x.pack(side=BOTTOM,fill=X)
+
+        style = ttk.Style()
+        style.configure('Treeview',
+        font=('Cambria',14),
+        rowheight=40)
+        style.configure('Treeview.Heading',font=('Constantia',18,'bold'))
+
+        contacts_tree = ttk.Treeview(frame1,height=7,selectmode='none',yscrollcommand=scroll_y.set,xscrollcommand=scroll_x.set)
+
+        contacts_tree.tag_configure('oddrow',background='#F8F8FF')
+        contacts_tree.tag_configure('evenrow',background='#9BDDFF')
+
+        scroll_x.config(command=contacts_tree.xview)
+        scroll_y.config(command=contacts_tree.yview)
+
+        contacts_tree['columns'] = ('Contact ID','First Name','Last Name','Phone Number','Address')
+
+        contacts_tree.heading('#0',text='')
+        contacts_tree.heading('#1',text='Contact ID',anchor='c')
+        contacts_tree.heading('#2',text='First Name',anchor='c')
+        contacts_tree.heading('#3',text='Last Name',anchor='c')
+        contacts_tree.heading('#4',text='Phone Number',anchor='c')
+        contacts_tree.heading('#5',text='Address',anchor='c')
+
+        contacts_tree.column('#0',width=0,minwidth=0,stretch=NO)
+        contacts_tree.column('#1',width=150,minwidth=0,stretch=NO,anchor='c')
+        contacts_tree.column('#2',width=200,minwidth=0,stretch=NO,anchor='c')
+        contacts_tree.column('#3',width=240,minwidth=0,stretch=NO,anchor='c')
+        contacts_tree.column('#4',width=260,minwidth=0,stretch=NO,anchor='c')
+        contacts_tree.column('#5',width=400,minwidth=0,stretch=NO,anchor='c')
+
+        tree_iid = 1 
+        for contact in CONTACTS:
+            if tree_iid % 2 == 0:
+                contacts_tree.insert(parent='',index='end',iid=tree_iid,values=contact,tags='evenrow')
+            else:
+                contacts_tree.insert(parent='',index='end',iid=tree_iid,values=contact,tags='oddrow')
+            tree_iid += 1
+
+        contacts_tree.pack()
 
 
 text1 = "Contact Manager \n\n\n\n\n\n\nClick Anywhere to Continue"
