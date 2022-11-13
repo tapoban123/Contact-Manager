@@ -4,6 +4,7 @@ from tkinter import messagebox
 import sqlite3
 
 
+
 root = Tk()
 root.geometry('800x700')
 root.title('Contact Manager')
@@ -97,12 +98,96 @@ def  add_rec():
     Button(top_add,text='OK',font=('Malgun Gothic Bold',18),padx=143,pady=10,borderwidth=5,command=add_recs_to_db).place(x=390,y=300)
 
 
-def delete_rec():
-    top_delete = Toplevel(root)
-    top_delete.title('Delete a Contact')
-    top_delete.geometry('500x400')
+def del_selected_contact():
+    contacts_to_del = contact_del_tree.selection()
 
-    Label(top_delete,text='Coming Soon...',font=('Arial',25)).pack(padx=30,pady=160)
+    for contact in contacts_to_del:
+        contact_del_tree.delete(contact)
+
+    con_index = 0
+    for update in range(len(contacts_to_del)):
+        cursor.execute(F'''DELETE FROM CONTACT_RECS WHERE CONTACT_ID = {contacts_to_del[con_index]};''')
+        conn.commit()
+
+        con_index += 1
+    
+    cursor.execute('SELECT * FROM CONTACT_RECS;')
+    ALL_CONTACTS_NEW = cursor.fetchall()
+
+    NEW_ID = 1
+    for rec in ALL_CONTACTS_NEW:
+        cursor.execute(f"UPDATE CONTACT_RECS SET CONTACT_ID = {NEW_ID} WHERE CONTACT_ID =  {rec[0]}")
+        conn.commit()
+
+        NEW_ID += 1
+
+
+def delete_rec():
+    global contact_del_tree
+
+    top_delete = Toplevel(root)
+    top_delete.title('Delete Contact')
+    top_delete.geometry('800x422')
+
+    del_frame = Frame(top_delete,height=600,width=600)
+    del_frame.pack(side=TOP)
+
+    del_frame2 = Frame(top_delete,width=1000,height=600,bg='#99BADD')
+    del_frame2.pack(side=TOP,anchor='w')
+
+    Button(del_frame2,text='Delete Selected',font=('Malgun Gothic Bold',18),padx=105,pady=10,borderwidth=4,command=del_selected_contact).place(x=5,y=10)
+    Button(del_frame2,text='Close',font=('Malgun Gothic Bold',18),padx=145,pady=10,borderwidth=4,command=top_delete.destroy).place(x=420,y=10)
+
+    xScroll = Scrollbar(del_frame,orient=HORIZONTAL)
+    xScroll.pack(side=BOTTOM,fill=X)
+
+    yScroll = Scrollbar(del_frame,orient=VERTICAL)
+    yScroll.pack(side=RIGHT,fill=Y)
+
+    style = ttk.Style()
+    style.configure('Treeview',
+    font=('Cambria',14),
+    rowheight=40)
+    style.configure('Treeview.Heading',font=('Constantia',18,'bold'))
+
+    contact_del_tree = ttk.Treeview(del_frame,height=7,selectmode='extended',yscrollcommand=yScroll.set,xscrollcommand=xScroll.set)
+
+    xScroll.config(command=contact_del_tree.xview)
+    yScroll.config(command=contact_del_tree.yview)
+
+    contact_del_tree.tag_configure('oddrow',background='#F8F8FF')
+    contact_del_tree.tag_configure('evenrow',background='#9BDDFF')
+
+    contact_del_tree['columns'] = ('Contact ID','First Name','Last Name','Phone Number','Address')
+
+    contact_del_tree.heading('#0',text='')
+    contact_del_tree.heading('#1',text='Contact ID',anchor='c')
+    contact_del_tree.heading('#2',text='First Name',anchor='c')
+    contact_del_tree.heading('#3',text='Last Name',anchor='c')
+    contact_del_tree.heading('#4',text='Phone Number',anchor='c')
+    contact_del_tree.heading('#5',text='Address',anchor='c')
+
+    contact_del_tree.column('#0',width=0,minwidth=0,stretch=NO)
+    contact_del_tree.column('#1',width=150,minwidth=0,stretch=NO,anchor='c')
+    contact_del_tree.column('#2',width=200,minwidth=0,stretch=NO,anchor='c')
+    contact_del_tree.column('#3',width=240,minwidth=0,stretch=NO,anchor='c')
+    contact_del_tree.column('#4',width=260,minwidth=0,stretch=NO,anchor='c')
+    contact_del_tree.column('#5',width=400,minwidth=0,stretch=NO,anchor='c')
+
+    cursor.execute('SELECT * FROM CONTACT_RECS;')
+    DEL_DATA = cursor.fetchall()
+
+    del_tree_iid = 1
+    for DATA in DEL_DATA:
+        if del_tree_iid % 2 == 0:
+            contact_del_tree.insert(parent='',index='end',iid=del_tree_iid,values=DATA,tags='evenrow')
+        else:
+            contact_del_tree.insert(parent='',index='end',iid=del_tree_iid,values=DATA,tags='oddrow')
+        del_tree_iid += 1
+
+    contact_del_tree.pack()
+
+    messagebox.showinfo('Contact IDs Updated','All Contact IDs have been updated',parent=top_delete)
 
 
 def edit_rec():
@@ -129,7 +214,7 @@ def search_contact():
                 contacts_tree.insert(parent='',index='end',iid=fname_iid,values=data,tags='oddrow')
             fname_iid += 1
     
-    if len(search_lname.get()) > 0 and (len(search_fname.get()) == len(search_phno.get()) == 0):
+    elif len(search_lname.get()) > 0 and (len(search_fname.get()) == len(search_phno.get()) == 0):
         cursor.execute(F"SELECT * FROM CONTACT_RECS WHERE CONTACT_LAST_NAME LIKE '{search_lname.get().title()}%';")
         lname_data = cursor.fetchall()
 
