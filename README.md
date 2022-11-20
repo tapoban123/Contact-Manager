@@ -1,4 +1,4 @@
-# Computer Science Poject Class XII-Sci-D
+# Computer Science Project Class XII-Sci-D
 
 ## Project Name: *Contact Manager*
 
