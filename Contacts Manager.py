@@ -234,7 +234,7 @@ def first_UI_scr():
 
     Button(top, text="View Contacts",font=('Malgun Gothic Bold',18),padx=45,pady=5,borderwidth=5,command=view_all,bg='#F0EAD6').place(x=400,y=200)
 
-    Button(top,text='Exit',font=('Malgun Gothic Bold',18),padx=296,pady=5,borderwidth=5,command=root.quit,bg='#F0EAD6').place(x=20,y=300)
+    Button(top,text='Exit',font=('Malgun Gothic Bold',18),padx=296,pady=5,borderwidth=5,command=lambda: root.destroy(),bg='#F0EAD6').place(x=20,y=300)
 
 
 def add_details_to_db():
