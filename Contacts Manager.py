@@ -8,7 +8,6 @@ import sqlite3
 root = Tk()
 root.geometry('800x700')
 root.title('Contact Manager')
-root.iconbitmap('Contact Manager icon.ico')
 
 conn = sqlite3.connect("Contacts_Mng.db")
 cursor = conn.cursor()
