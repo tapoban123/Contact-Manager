@@ -26,7 +26,7 @@ cursor.execute(
 class Codes_Used_Multiple_Times:
     def __init__(self):
         pass
-    
+
     def Contacts_Treeview(self,frame,mode,records,height=7):
         global contacts_tree
 
@@ -57,7 +57,7 @@ class Codes_Used_Multiple_Times:
         contacts_tree.heading('#2',text='First Name',anchor='c')
         contacts_tree.heading('#3',text='Last Name',anchor='c')
         contacts_tree.heading('#4',text='Phone Number',anchor='c')
-        contacts_tree.heading('#5',text='Address',anchor='c')                                       
+        contacts_tree.heading('#5',text='Address',anchor='c')
 
         contacts_tree.column('#0',width=0,minwidth=0,stretch=NO)
         contacts_tree.column('#1',width=150,minwidth=0,stretch=NO,anchor='c')
@@ -66,7 +66,7 @@ class Codes_Used_Multiple_Times:
         contacts_tree.column('#4',width=260,minwidth=0,stretch=NO,anchor='c')
         contacts_tree.column('#5',width=400,minwidth=0,stretch=NO,anchor='c')
 
-        tree_iid = 1 
+        tree_iid = 1
         for contact in records:
             if tree_iid % 2 == 0:
                 contacts_tree.insert(parent='',index='end',iid=tree_iid,values=contact,tags='evenrow')
@@ -103,9 +103,9 @@ class Codes_Used_Multiple_Times:
 
         edit_heading = Label(edit_frame2,text='Please fill the following detail or select the contact you want to edit',font=('Corbel',20,'bold'),bg='#99BADD',wraplength=640)
         edit_lbl = Label(edit_frame2,text='Enter Contact ID:',font=('Corbel',16,'bold'),bg='#99BADD')
-        
+
         ent_edit = Entry(edit_frame2,width=30,borderwidth=5,font=('Arial 14'),bg='#DCDCDC')
-        
+
         ent_edit.focus()
         ent_edit.bind('<Return>',lambda x: edit_specific_contact())
 
@@ -134,7 +134,6 @@ class Codes_Used_Multiple_Times:
         global btn_update
         global btn_edit_2
         global btn_close_2
-        
 
         top_edit.geometry('800x630')
 
@@ -202,7 +201,9 @@ class Codes_Used_Multiple_Times:
             conn.commit()
 
             con_index += 1
-        
+
+        messagebox.showinfo('Contact Deleted',"The selected contact has been deleted",parent=top_delete)
+
         cursor.execute('SELECT * FROM CONTACT_RECS;')
         ALL_CONTACTS_NEW = cursor.fetchall()
 
@@ -212,8 +213,8 @@ class Codes_Used_Multiple_Times:
             conn.commit()
 
             NEW_ID += 1
-            
-    
+
+
 Class_Instance = Codes_Used_Multiple_Times()
 
 
@@ -234,7 +235,7 @@ def first_UI_scr():
 
     Button(top, text="View Contacts",font=('Malgun Gothic Bold',18),padx=45,pady=5,borderwidth=5,command=view_all,bg='#F0EAD6').place(x=400,y=200)
 
-    Button(top,text='Exit',font=('Malgun Gothic Bold',18),padx=296,pady=5,borderwidth=5,command=lambda: root.destroy(),bg='#F0EAD6').place(x=20,y=300)
+    Button(top,text='Exit',font=('Malgun Gothic Bold',18),padx=296,pady=5,borderwidth=5,command=lambda:root.destroy(),bg='#F0EAD6').place(x=20,y=300)
 
 
 def add_details_to_db():
@@ -243,6 +244,7 @@ def add_details_to_db():
         entry_fname.focus()
     elif len(entry_phno.get()) == 0:
         messagebox.showerror('Empty Phone Number',"You must enter the Phone Number of the contact.",parent=top_add)
+        entry_phno.focus()
     else:
         try:
             cursor.execute('SELECT * FROM CONTACT_RECS;')
@@ -256,9 +258,11 @@ def add_details_to_db():
             entry_phno.delete(0,END)
             entry_address.delete(0,END)
 
+            messagebox.showinfo('Contact Saved',"Contact has been saved. You can view, edit or delete the contact anytime you want.",parent=top_add)
+
             entry_fname.focus()
         except:
-            messagebox.showerror('Wrong Details',"You have entered the contact detail in the wrong space",parent=top_add)
+            messagebox.showerror('Invalid Data',"Please re-check the details you entered and then try again.",parent=top_add)
 
 
 def  fill_details():
@@ -308,11 +312,11 @@ def del_selected_contact():
     if len(contacts_to_del) > 1:
         if del_confirmation('contacts') == True:
             Class_Instance.Del_Contact_Process()
-        
+
     elif len(contacts_to_del) == 1:
         if del_confirmation('contact') == True:
             Class_Instance.Del_Contact_Process()
-    
+
     elif len(contacts_to_del) == 0:
         messagebox.showinfo('No Contact Selected',"You need to select the contact(s) you want to delete and then click the button.",parent=top_delete)
 
@@ -342,7 +346,7 @@ def delete_rec():
         Class_Instance.Contacts_Treeview(del_frame,'extended',DEL_DATA)
 
         messagebox.showinfo('Contact ID(s) Updated','Contact ID(s) have been updated',parent=top_delete)
-    
+
 
 def Update_with_new(con_ID):
     try:
@@ -372,15 +376,17 @@ def Update_with_new(con_ID):
             else:
                 contacts_tree.insert(parent='',index='end',iid=edited_iid,values=row,tags='oddrow')
             edited_iid += 1
-        
+
+        messagebox.showinfo('Contact Updated',"Contact has been updated",parent=top_edit)
+
         Class_Instance.Edit_Frame2_UI(True)
     except:
-        messagebox.showerror("Wrong Data","Please enter the proper data in the proper space.",parent=top_edit)
-        
+        messagebox.showerror("Invalid Data","Please check the data you entered and then try again.",parent=top_edit)
+
 
 def edit_specific_contact():
     global rec
-    
+
     if len(contacts_tree.selection()) == 0 and len(ent_edit.get()) > 0:
         if ent_edit.get() in contacts_tree.get_children():
             cursor.execute(f'SELECT * FROM CONTACT_RECS WHERE CONTACT_ID = {ent_edit.get()};')
@@ -446,7 +452,7 @@ def search_contact():
                 else:
                     contacts_tree.insert(parent='',index='end',iid=fname_iid,values=data,tags='oddrow')
                 fname_iid += 1
-        
+
         elif len(search_lname.get()) > 0 and (len(search_fname.get()) == len(search_phno.get()) == 0):
             cursor.execute(F"SELECT * FROM CONTACT_RECS WHERE CONTACT_LAST_NAME LIKE '{search_lname.get().strip()}%';")
             lname_data = cursor.fetchall()
@@ -468,7 +474,7 @@ def search_contact():
 
             for rec_phno in contacts_tree.get_children():
                 contacts_tree.delete(rec_phno)
-            
+
             phno_iid = 1
             for data3 in phno_data:
                 if phno_iid % 2 == 0:
@@ -476,7 +482,7 @@ def search_contact():
                 else:
                     contacts_tree.insert(parent='',index='end',iid=phno_iid,values=data3,tags='oddrow')
                 phno_iid += 1
-    
+
         elif (len(search_fname.get()) == len(search_lname.get()) == len(search_phno.get()) == 0):
             cursor.execute('SELECT * FROM CONTACT_RECS;')
             ALL_DATA = cursor.fetchall()
@@ -513,7 +519,7 @@ def search_contact():
 
             for recphl in contacts_tree.get_children():
                 contacts_tree.delete(recphl)
-            
+
             phl_iid = 1
             for data5 in phno_lname:
                 if phl_iid % 2 == 0:
@@ -521,14 +527,14 @@ def search_contact():
                 else:
                     contacts_tree.insert(parent='',index='end',iid=phl_iid,values=data5,tags='oddrow')
                 phl_iid += 1
-        
+
         elif len(search_fname.get()) > 0 and len(search_lname.get()) == 0 and len(search_phno.get()) > 0:
             cursor.execute(f"SELECT * FROM CONTACT_RECS WHERE CONTACT_FIRST_NAME LIKE '{search_fname.get().strip()}%' and CONTACT_PH_NO LIKE '{search_phno.get()}%';")
             fphno = cursor.fetchall()
 
             for fph in contacts_tree.get_children():
                 contacts_tree.delete(fph)
-            
+
             fph_iid = 1
             for data6 in fphno:
                 if fph_iid % 2 == 0:
@@ -543,7 +549,7 @@ def search_contact():
 
             for flphno in contacts_tree.get_children():
                 contacts_tree.delete(flphno)
-            
+
             fname_lname_phno_iid = 1
             for data7 in fname_lname_phno:
                 if fname_lname_phno_iid % 2 == 0:
@@ -551,7 +557,7 @@ def search_contact():
                 else:
                     contacts_tree.insert(parent='',index='end',iid=fname_lname_phno_iid,values=data7,tags='oddrow')
                 fname_lname_phno_iid += 1
-        
+
     except:
         messagebox.showwarning('Wrong Search Details',"No Contact found by the search details you entered",parent=top_view_all)
 
@@ -570,7 +576,7 @@ def view_all():
         user_wish = messagebox.askyesno('No Contact to Display',"You do not have any contact recorded to display.Do you want ot add a contact now?",parent=top)
         if user_wish == True:
             fill_details()
-            
+
     else:
         top_view_all = Toplevel(root,bg='#99BADD')
         top_view_all.title('All Contacts')
