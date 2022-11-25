@@ -202,7 +202,7 @@ class Codes_Used_Multiple_Times:
 
             con_index += 1
 
-        messagebox.showinfo('Contact Deleted',"The selected contact has been deleted",parent=top_delete)
+        messagebox.showinfo('Contact Deleted',"The selected contact(s) have been deleted",parent=top_delete)
 
         cursor.execute('SELECT * FROM CONTACT_RECS;')
         ALL_CONTACTS_NEW = cursor.fetchall()
@@ -250,7 +250,17 @@ def add_details_to_db():
             cursor.execute('SELECT * FROM CONTACT_RECS;')
             NO_OF_RECS = cursor.fetchall()
 
-            cursor.execute(f"INSERT INTO CONTACT_RECS VALUES({len(NO_OF_RECS)+1},'{entry_fname.get().strip()}','{entry_lname.get().strip()}',{entry_phno.get().strip()},'{entry_address.get().strip()}');")
+            entry_list = [entry_fname, entry_lname, entry_phno,entry_address]
+
+            entry_list_values = {}
+
+            for entry in entry_list:
+                if len(entry.get()) == 0:
+                    entry_list_values[entry] = 'NULL'
+                else:
+                    entry_list_values[entry] = entry.get().strip()
+
+            cursor.execute(f"INSERT INTO CONTACT_RECS VALUES({len(NO_OF_RECS)+1},'{entry_list_values[entry_fname]}','{entry_list_values[entry_lname]}',{entry_list_values[entry_phno]},'{entry_list_values[entry_address]}');")
             conn.commit()
 
             entry_fname.delete(0,END)
